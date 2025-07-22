@@ -28,7 +28,7 @@ function SignUp() {
       <p className="mt-6 text-sm text-center text-gray-600">
         이미 계정이 있나요?{" "}
         <Link
-          to="/signin"
+          to="/sign-in"
           className="font-medium text-blue-600 hover:text-blue-500 hover:underline"
         >
           로그인하기

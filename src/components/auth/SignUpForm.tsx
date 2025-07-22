@@ -19,7 +19,13 @@ import {
 } from "lucide-react";
 
 export function SignUpForm() {
-  const { signUp, sendOtp, verifyOtp, loading, error: authError } = useAuthStore();
+  const {
+    signUp,
+    sendOtp,
+    verifyOtp,
+    loading,
+    error: authError,
+  } = useAuthStore();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -42,7 +48,9 @@ export function SignUpForm() {
 
   useEffect(() => {
     if (!isTimerActive && otpSent) {
-      setOtpError("인증 시간이 만료되었습니다. 인증 번호를 다시 발급받아주세요.");
+      setOtpError(
+        "인증 시간이 만료되었습니다. 인증 번호를 다시 발급받아주세요."
+      );
       return;
     }
 
@@ -159,50 +167,186 @@ export function SignUpForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* 이름, 이메일, 비밀번호 등 기존 필드 생략 없이 전체 코드 포함 */}
       <div className="space-y-2">
-        <Label htmlFor="name" className="block text-left">이름</Label>
-        <div className="relative"><User className="absolute w-4 h-4 text-gray-400 left-3 top-3" /><Input id="name" name="name" type="text" placeholder="이름을 입력해 주세요." className="pl-10" value={formData.name} onChange={handleInputChange} required /></div>
+        <Label htmlFor="name" className="block text-left">
+          이름
+        </Label>
+        <div className="relative">
+          <User className="absolute w-4 h-4 text-gray-400 left-3 top-3" />
+          <Input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="이름을 입력해 주세요."
+            className="pl-10"
+            value={formData.name}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email" className="block text-left">이메일</Label>
+        <Label htmlFor="email" className="block text-left">
+          이메일
+        </Label>
         <div className="flex gap-2">
-          <div className="relative flex-grow"><Mail className="absolute w-4 h-4 text-gray-400 left-3 top-3" /><Input id="email" name="email" type="email" placeholder="이메일을 입력해 주세요." className="pl-10" value={formData.email} onChange={handleInputChange} required disabled={otpSent} /></div>
-          <Button type="button" onClick={handleSendOtp} disabled={loading || isTimerActive}>{isTimerActive ? "재전송" : "인증번호 발송"}</Button>
+          <div className="relative flex-grow">
+            <Mail className="absolute w-4 h-4 text-gray-400 left-3 top-3" />
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="이메일을 입력해 주세요."
+              className="pl-10"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+              disabled={otpSent}
+            />
+          </div>
+          <Button
+            type="button"
+            onClick={handleSendOtp}
+            disabled={loading || isTimerActive}
+          >
+            {isTimerActive ? "재전송" : "인증번호 발송"}
+          </Button>
         </div>
       </div>
 
       {otpSent && !isOtpVerified && (
         <div className="p-4 border rounded-md bg-gray-50">
-          <Label htmlFor="otp" className="block text-left">인증번호</Label>
+          <Label htmlFor="otp" className="block text-left">
+            인증번호
+          </Label>
           <div className="flex items-center gap-2 mt-2">
-            <div className="relative flex-grow"><KeyRound className="absolute w-4 h-4 text-gray-400 left-3 top-3" /><Input id="otp" name="otp" type="text" placeholder="6자리 인증번호" className="pl-10" value={formData.otp} onChange={handleInputChange} required disabled={!isTimerActive || loading} /></div>
-            <div className={`text-sm font-medium ${isTimerActive ? "text-gray-600" : "text-red-500"}`}>{formatTime(timeLeft)}</div>
-            <Button type="button" onClick={handleVerifyOtp} disabled={!isTimerActive || loading}>{loading ? "확인중" : "확인"}</Button>
+            <div className="relative flex-grow">
+              <KeyRound className="absolute w-4 h-4 text-gray-400 left-3 top-3" />
+              <Input
+                id="otp"
+                name="otp"
+                type="text"
+                placeholder="6자리 인증번호"
+                className="pl-10"
+                value={formData.otp}
+                onChange={handleInputChange}
+                required
+                disabled={!isTimerActive || loading}
+              />
+            </div>
+            <div
+              className={`text-sm font-medium ${
+                isTimerActive ? "text-gray-600" : "text-red-500"
+              }`}
+            >
+              {formatTime(timeLeft)}
+            </div>
+            <Button
+              type="button"
+              onClick={handleVerifyOtp}
+              disabled={!isTimerActive || loading}
+            >
+              {loading ? "확인중" : "확인"}
+            </Button>
           </div>
           {otpError && <p className="mt-2 text-sm text-red-500">{otpError}</p>}
         </div>
       )}
 
-      {message && <Alert className={message.includes("완료") ? "border-green-500" : ""}><AlertDescription>{message}</AlertDescription></Alert>}
-      
+      {message && (
+        <Alert className={message.includes("완료") ? "border-green-500" : ""}>
+          <AlertDescription>{message}</AlertDescription>
+        </Alert>
+      )}
+
       <div className="space-y-2">
-        <Label htmlFor="password" className="block text-left">비밀번호</Label>
-        <div className="relative"><Lock className="absolute w-4 h-4 text-gray-400 left-3 top-3" /><Input id="password" name="password" type={showPassword ? "text" : "password"} placeholder="비밀번호를 입력해 주세요." className="pl-10 pr-12" value={formData.password} onChange={handleInputChange} required /><button type="button" className="absolute text-gray-400 transform -translate-y-1/2 bg-transparent border-none right-3 top-1/2 hover:text-gray-600 focus:outline-none" onClick={() => setShowPassword(!showPassword)}>{showPassword ? <EyeOff size={16} /> : <Eye size={16} />}</button></div>
+        <Label htmlFor="password" className="block text-left">
+          비밀번호
+        </Label>
+        <div className="relative">
+          <Lock className="absolute w-4 h-4 text-gray-400 left-3 top-3" />
+          <Input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            placeholder="비밀번호를 입력해 주세요."
+            className="pl-10 pr-12"
+            value={formData.password}
+            onChange={handleInputChange}
+            required
+          />
+          <button
+            type="button"
+            className="absolute text-gray-400 transform -translate-y-1/2 bg-transparent border-none right-3 top-1/2 hover:text-gray-600 focus:outline-none"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        </div>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="confirmPassword" className="block text-left">비밀번호 확인</Label>
-        <div className="relative"><Lock className="absolute w-4 h-4 text-gray-400 left-3 top-3" /><Input id="confirmPassword" name="confirmPassword" type={showConfirmPassword ? "text" : "password"} placeholder="비밀번호를 다시 입력해 주세요." className={`pl-10 pr-10 ${isPasswordMismatch ? "border-red-500" : ""}`} value={formData.confirmPassword} onChange={handleInputChange} required /><button type="button" className="absolute text-gray-400 transform -translate-y-1/2 bg-transparent border-none right-3 top-1/2 hover:text-gray-600 focus:outline-none" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>{showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}</button></div>
-        {isPasswordMismatch && <p className="text-sm text-red-500">{passwordError}</p>}
+        <Label htmlFor="confirmPassword" className="block text-left">
+          비밀번호 확인
+        </Label>
+        <div className="relative">
+          <Lock className="absolute w-4 h-4 text-gray-400 left-3 top-3" />
+          <Input
+            id="confirmPassword"
+            name="confirmPassword"
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="비밀번호를 다시 입력해 주세요."
+            className={`pl-10 pr-10 ${
+              isPasswordMismatch ? "border-red-500" : ""
+            }`}
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
+            required
+          />
+          <button
+            type="button"
+            className="absolute text-gray-400 transform -translate-y-1/2 bg-transparent border-none right-3 top-1/2 hover:text-gray-600 focus:outline-none"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        </div>
+        {isPasswordMismatch && (
+          <p className="text-sm text-red-500">{passwordError}</p>
+        )}
       </div>
 
-      {authError && !otpError && <Alert variant="destructive"><AlertDescription>{authError}</AlertDescription></Alert>}
+      {authError && !otpError && (
+        <Alert variant="destructive">
+          <AlertDescription>{authError}</AlertDescription>
+        </Alert>
+      )}
 
       <div className="flex items-start space-x-2">
-        <Checkbox id="agreeToTerms" name="agreeToTerms" checked={formData.agreeToTerms} onCheckedChange={(checked: boolean) => setFormData((prev) => ({ ...prev, agreeToTerms: checked }))} />
-        <Label htmlFor="agreeToTerms" className="text-sm font-normal text-left">위 <Link to="/terms" className="text-blue-600 hover:underline">약관</Link>에 동의합니다.</Label>
+        <Checkbox
+          id="agreeToTerms"
+          name="agreeToTerms"
+          checked={formData.agreeToTerms}
+          onCheckedChange={(checked: boolean) =>
+            setFormData((prev) => ({ ...prev, agreeToTerms: checked }))
+          }
+        />
+        <Label htmlFor="agreeToTerms" className="text-sm font-normal text-left">
+          <Link to="/terms" className="text-blue-600 hover:underline">
+            약관
+          </Link>
+          에 동의합니다.
+        </Label>
       </div>
-      <Button type="submit" className="w-full" disabled={!isOtpVerified || loading || !formData.agreeToTerms || !!passwordError}>{loading ? "계정 생성 중" : "계정 만들기"}<ArrowRight className="w-4 h-4 ml-2" /></Button>
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={
+          !isOtpVerified || loading || !formData.agreeToTerms || !!passwordError
+        }
+      >
+        {loading ? "계정 생성 중" : "계정 만들기"}
+        <ArrowRight className="w-4 h-4 ml-2" />
+      </Button>
     </form>
   );
 }
