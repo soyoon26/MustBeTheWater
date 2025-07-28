@@ -10,7 +10,7 @@ function PageLayout({ children }: PageLayoutProps) {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Header />
-      <main className="container flex-grow px-4 py-8 mx-auto">{children}</main>
+      <main className="container flex-grow px-4 mx-auto">{children}</main>
       <Footer />
     </div>
   );
